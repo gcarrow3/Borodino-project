@@ -1,8 +1,6 @@
+patches-own [terrain-type ranged-attack-damage-modifier ranged-attack-range-modifier damage-reduction-modifier movement-modifier can-enter]
+
 ;; Global Variables
-extensions [bitmap]
-;;bitmap:import "Battle_of_Borodino_map.png"
-
-
 globals [
   french-dead
   russian-dead
@@ -40,19 +38,9 @@ russian-cannons-own [health side speed max-range ph cone-size]
 russian-howitzers-own [health side speed max-range ph cone-size]
 
 to setup
-  clear-all ;; Clears the world for a fresh start
-
-  ;; Set the background color
-  ;; import-drawing "Battle_of_Borodino_map.png"
-  let image bitmap:import "Battle_of_Borodino_map.png" ;; import image
-  let width bitmap:width image ;; get width and height
-  let height bitmap:height image
-  resize-world (- width / 2) (width / 2) (- height / 2) (height / 2) ;; resize world to fit pixels of map
-  set-patch-size 0.3 ;; adjust patch size to fit within frame
-  import-pcolors-rgb "Battle_of_Borodino_map.png" ;; reads image and scales to the patch size
-
-  ; bitmap:scaled "Battle_of_Borodino_map.png" 2000 1000
-
+  clear-all
+  setup-terrain
+  reset-ticks
 
   set french-dead 0
   set french-total-units 0
@@ -175,6 +163,520 @@ to setup
 
 
   reset-ticks ;; Resets tick counter to zero
+end
+
+to setup-terrain
+  ask patches [
+    ;; Assign terrain types randomly (for now)
+    ;; let random-value random 100
+    ;; if random-value < 50 [ set terrain-type "Flat Plains" ]
+    ;; if random-value >= 50 and random-value < 65 [ set terrain-type "River" ]
+    ;; if random-value >= 65 and random-value < 85 [ set terrain-type "Forest" ]
+    ;; if random-value >= 85 [ set terrain-type "Hill" ]
+
+    ;; (y = 20)
+    ask patches with [pycor = 20] [
+      if pxcor < -10 [ set terrain-type "Forest" ]
+      if pxcor >= -10 and pxcor < -5 [ set terrain-type "Flat Plains" ]
+      if pxcor >= -5 and pxcor < 5 [ set terrain-type "Forest" ]
+      if pxcor >= 5 and pxcor < 18 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 18 and pxcor < 27 [ set terrain-type "River" ]
+      if pxcor >= 27 [ set terrain-type "Flat Plains" ]
+    ]
+
+    ask patches with [pycor = 19] [
+      if pxcor < -9 [ set terrain-type "Forest" ]
+      if pxcor >= -9 and pxcor < -4 [ set terrain-type "Flat Plains" ]
+      if pxcor >= -4 and pxcor < 4 [ set terrain-type "Forest" ]
+      if pxcor >= 4 and pxcor < 25 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 25 and pxcor < 27 [ set terrain-type "River" ]
+      if pxcor >= 27 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 19 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 18] [
+      if pxcor < -8 [ set terrain-type "Forest" ]
+      if pxcor >= -8 and pxcor < -3 [ set terrain-type "Flat Plains" ]
+      if pxcor >= -3 and pxcor < 3 [ set terrain-type "Forest" ]
+      if pxcor >= 3 and pxcor < 21 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 21 and pxcor < 25 [ set terrain-type "Forest" ]
+      if pxcor = 25 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 26 and pxcor < 27 [ set terrain-type "River" ]
+      if pxcor >= 27 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 19 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 17] [
+      if pxcor < -8 [ set terrain-type "Forest" ]
+      if pxcor >= -8 and pxcor < -1 [ set terrain-type "Flat Plains" ]
+      if pxcor >= -1 and pxcor < 1 [ set terrain-type "Forest" ]
+      if pxcor >= 1 and pxcor < 21 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 21 and pxcor < 25 [ set terrain-type "Forest" ]
+      if pxcor = 25 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 26 and pxcor < 27 [ set terrain-type "River" ]
+      if pxcor >= 27 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 19 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 16] [
+      if pxcor < -9 [ set terrain-type "Forest" ]
+      if pxcor >= -9 and pxcor < 1 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 1 and pxcor < 21 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 21 and pxcor < 25 [ set terrain-type "Forest" ]
+      if pxcor = 25 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 26 and pxcor < 27 [ set terrain-type "River" ]
+      if pxcor >= 27 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 14 [ set terrain-type "River" ]
+      if pxcor = 15 [ set terrain-type "River" ]
+      if pxcor = 16 [ set terrain-type "River" ]
+      if pxcor = 19 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 15] [
+      if pxcor < -10 [ set terrain-type "Forest" ]
+      if pxcor >= -10 and pxcor < 1 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 1 and pxcor < 21 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 22 and pxcor < 25 [ set terrain-type "Forest" ]
+      if pxcor = 25 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 26 and pxcor < 27 [ set terrain-type "River" ]
+      if pxcor >= 27 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 13 [ set terrain-type "River" ]
+      if pxcor = 14 [ set terrain-type "River" ]
+
+      if pxcor = 16 [ set terrain-type "River" ]
+      if pxcor = 17 [ set terrain-type "River" ]
+      if pxcor = 19 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 14] [
+      if pxcor < -13 [ set terrain-type "Forest" ]
+      if pxcor >= -13 and pxcor < 1 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 1 and pxcor < 22 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 22 and pxcor < 25 [ set terrain-type "Forest" ]
+      if pxcor = 25 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 26 and pxcor < 27 [ set terrain-type "River" ]
+      if pxcor >= 27 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 12 [ set terrain-type "River" ]
+      if pxcor = 13 [ set terrain-type "River" ]
+
+      if pxcor = 17 [ set terrain-type "River" ]
+      if pxcor = 18 [ set terrain-type "River" ]
+      if pxcor = 19 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 13] [
+      if pxcor < -14 [ set terrain-type "Forest" ]
+      if pxcor >= -14 and pxcor < 16 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 16 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 10 [ set terrain-type "River" ]
+      if pxcor = 11 [ set terrain-type "River" ]
+      if pxcor = 12 [ set terrain-type "River" ]
+
+      if pxcor = 26 [ set terrain-type "River" ]
+      if pxcor = 27 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 12] [
+      if pxcor < -16 [ set terrain-type "Forest" ]
+      if pxcor >= -16 and pxcor < 16 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 16 and pxcor < 19 [ set terrain-type "Hill" ]
+      if pxcor >= 19 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 8 [ set terrain-type "River" ]
+      if pxcor = 9 [ set terrain-type "River" ]
+      if pxcor = 10 [ set terrain-type "River" ]
+
+      if pxcor = 27 [ set terrain-type "River" ]
+      if pxcor = 28 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 11] [
+      if pxcor < -17 [ set terrain-type "Forest" ]
+      if pxcor >= -17 and pxcor < 16 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 16 and pxcor < 19 [ set terrain-type "Hill" ]
+      if pxcor >= 19 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 6 [ set terrain-type "River" ]
+      if pxcor = 7 [ set terrain-type "River" ]
+      if pxcor = 8 [ set terrain-type "River" ]
+
+      if pxcor = 28 [ set terrain-type "River" ]
+      if pxcor = 29 [ set terrain-type "River" ]
+      if pxcor = 30 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 10] [
+      if pxcor < -20 [ set terrain-type "Forest" ]
+      if pxcor >= -20 and pxcor < 16 [ set terrain-type "Flat Plains" ]
+      if pxcor >= 16 and pxcor < 18 [ set terrain-type "Hill" ]
+      if pxcor >= 18 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 4 [ set terrain-type "River" ]
+      if pxcor = 5 [ set terrain-type "River" ]
+      if pxcor = 6 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 9] [
+      if pxcor < -22 [ set terrain-type "Forest" ]
+      if pxcor >= -22 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 2 [ set terrain-type "River" ]
+      if pxcor = 3 [ set terrain-type "River" ]
+      if pxcor = 4 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 8] [
+      if pxcor < -25 [ set terrain-type "Forest" ]
+      if pxcor >= -25 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = 0 [ set terrain-type "River" ]
+      if pxcor = 1 [ set terrain-type "River" ]
+      if pxcor = 2 [ set terrain-type "River" ]
+    ]
+
+
+    ask patches with [pycor = 7] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = -4 [ set terrain-type "River" ]
+      if pxcor = -3 [ set terrain-type "River" ]
+      if pxcor = -2 [ set terrain-type "Bridge" ]
+      if pxcor = -1 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 6] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = -6 [ set terrain-type "River" ]
+      if pxcor = -5 [ set terrain-type "River" ]
+      if pxcor = -4 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 5] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = -8 [ set terrain-type "River" ]
+      if pxcor = -7 [ set terrain-type "Bridge" ]
+      if pxcor = -6 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 4] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = -10 [ set terrain-type "River" ]
+      if pxcor = -9 [ set terrain-type "River" ]
+      if pxcor = -8 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 3] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = -12 [ set terrain-type "River" ]
+      if pxcor = -11 [ set terrain-type "River" ]
+      if pxcor = -10 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 2] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor = -2 [ set terrain-type "Hill" ]
+      if pxcor = -1 [ set terrain-type "Hill" ]
+      if pxcor = -0 [ set terrain-type "Hill" ]
+
+      if pxcor = -7 [ set terrain-type "Hill" ]
+      if pxcor = -6 [ set terrain-type "Hill" ]
+      if pxcor = -5 [ set terrain-type "Hill" ]
+
+      if pxcor = -14 [ set terrain-type "River" ]
+      if pxcor = -13 [ set terrain-type "River" ]
+      if pxcor = -12 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 1] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -1 and pxcor <= 2 [ set terrain-type "Hill" ]
+
+      if pxcor = -8 [ set terrain-type "Hill" ]
+      if pxcor = -7 [ set terrain-type "Hill" ]
+      if pxcor = -6 [ set terrain-type "Hill" ]
+      if pxcor = -5 [ set terrain-type "Hill" ]
+      if pxcor = -4 [ set terrain-type "Hill" ]
+
+      if pxcor = -16 [ set terrain-type "River" ]
+      if pxcor = -15 [ set terrain-type "River" ]
+      if pxcor = -14 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = 0] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= 0 and pxcor <= 5 [ set terrain-type "Hill" ]
+
+      if pxcor = -8 [ set terrain-type "Hill" ]
+      if pxcor = -7 [ set terrain-type "Hill" ]
+      if pxcor = -6 [ set terrain-type "Hill" ]
+      if pxcor = -5 [ set terrain-type "Hill" ]
+      if pxcor = -4 [ set terrain-type "Hill" ]
+
+      if pxcor = -18 [ set terrain-type "River" ]
+      if pxcor = -17 [ set terrain-type "River" ]
+      if pxcor = -16 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = -1] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= 0 and pxcor <= 8 [ set terrain-type "Hill" ]
+
+      if pxcor = -8 [ set terrain-type "Hill" ]
+      if pxcor = -7 [ set terrain-type "Hill" ]
+      if pxcor = -6 [ set terrain-type "Hill" ]
+      if pxcor = -5 [ set terrain-type "Hill" ]
+      if pxcor = -4 [ set terrain-type "Hill" ]
+
+      if pxcor = -20 [ set terrain-type "River" ]
+      if pxcor = -19 [ set terrain-type "River" ]
+      if pxcor = -18 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = -2] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -1 and pxcor <= 10 [ set terrain-type "Hill" ]
+
+      if pxcor = -7 [ set terrain-type "Hill" ]
+      if pxcor = -6 [ set terrain-type "Hill" ]
+      if pxcor = -5 [ set terrain-type "Hill" ]
+
+      if pxcor >= -17 and pxcor <= -13 [ set terrain-type "Hill" ]
+
+      if pxcor = -22 [ set terrain-type "River" ]
+      if pxcor = -21 [ set terrain-type "River" ]
+      if pxcor = -20 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = -3] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -2 and pxcor <= 11 [ set terrain-type "Hill" ]
+
+      if pxcor >= -19 and pxcor <= -14 [ set terrain-type "Hill" ]
+
+      if pxcor = -24 [ set terrain-type "River" ]
+      if pxcor = -23 [ set terrain-type "River" ]
+      if pxcor = -22 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = -4] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -3 and pxcor <= 11 [ set terrain-type "Hill" ]
+
+      if pxcor >= -21 and pxcor <= -14 [ set terrain-type "Hill" ]
+
+      if pxcor = -26 [ set terrain-type "River" ]
+      if pxcor = -25 [ set terrain-type "River" ]
+      if pxcor = -24 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = -5] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -4 and pxcor <= 13 [ set terrain-type "Hill" ]
+
+      if pxcor >= -22 and pxcor <= -14 [ set terrain-type "Hill" ]
+
+      if pxcor = -28 [ set terrain-type "River" ]
+      if pxcor = -27 [ set terrain-type "River" ]
+      if pxcor = -26 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = -6] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -4 and pxcor <= 12 [ set terrain-type "Hill" ]
+
+      if pxcor >= -23 and pxcor <= -15 [ set terrain-type "Hill" ]
+
+      if pxcor = -30 [ set terrain-type "River" ]
+      if pxcor = -29 [ set terrain-type "River" ]
+      if pxcor = -28 [ set terrain-type "River" ]
+    ]
+
+    ask patches with [pycor = -7] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -3 and pxcor <= 10 [ set terrain-type "Hill" ]
+
+      if pxcor >= -23 and pxcor <= -15 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -8] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -2 and pxcor <= 8 [ set terrain-type "Hill" ]
+
+      if pxcor >= -24 and pxcor <= -15 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -9] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -7 and pxcor <= -7 [ set terrain-type "Hill" ]
+
+      if pxcor >= -1 and pxcor <= 6 [ set terrain-type "Hill" ]
+
+      if pxcor >= -24 and pxcor <= -16 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -10] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -9 and pxcor <= -6 [ set terrain-type "Hill" ]
+
+      if pxcor >= 0 and pxcor <= 3 [ set terrain-type "Hill" ]
+
+      if pxcor >= -24 and pxcor <= -16 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -11] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -10 and pxcor <= -5 [ set terrain-type "Hill" ]
+
+      if pxcor >= 1 and pxcor <= 2 [ set terrain-type "Hill" ]
+
+      if pxcor >= -25 and pxcor <= -17 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -12] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -11 and pxcor <= -4 [ set terrain-type "Hill" ]
+
+      if pxcor >= -25 and pxcor <= -17 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -13] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -12 and pxcor <= -3 [ set terrain-type "Hill" ]
+
+      if pxcor >= -25 and pxcor <= -17 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -14] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -12 and pxcor <= -3 [ set terrain-type "Forest" ]
+
+      if pxcor >= -25 and pxcor <= -17 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -15] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -13 and pxcor <= -2 [ set terrain-type "Forest" ]
+
+      if pxcor >= -26 and pxcor <= -18 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -16] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -13 and pxcor <= -2 [ set terrain-type "Forest" ]
+
+      if pxcor >= -26 and pxcor <= -18 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -17] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -14 and pxcor <= -1 [ set terrain-type "Forest" ]
+
+      if pxcor >= -26 and pxcor <= -18 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -18] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -15 and pxcor <= 0 [ set terrain-type "Forest" ]
+
+      if pxcor >= -26 and pxcor <= -18 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -19] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -16 and pxcor <= 1 [ set terrain-type "Forest" ]
+
+      if pxcor >= -27 and pxcor <= -19 [ set terrain-type "Hill" ]
+    ]
+
+    ask patches with [pycor = -20] [
+      if pxcor >= -30 [ set terrain-type "Flat Plains" ]
+
+      if pxcor >= -17 and pxcor <= 2 [ set terrain-type "Forest" ]
+
+      if pxcor >= -27 and pxcor <= -19 [ set terrain-type "Hill" ]
+    ]
+
+    ;; Apply terrain-specific movement penalties and cover bonuses
+    if terrain-type = "Flat Plains" [
+      set ranged-attack-damage-modifier 1 ;; 0% bonus ranged attack damage
+      set ranged-attack-range-modifier 1 ;; 0% bonus ranged attack range
+      set damage-reduction-modifier 1 ;; 0% damage reduction
+      set movement-modifier 1  ;; 0% movement speed reduction
+      set can-enter true
+      set pcolor green + 1  ;; Color for flat plains
+    ]
+
+    if terrain-type = "Bridge" [
+      set ranged-attack-damage-modifier 1 ;; 0% bonus ranged attack damage
+      set ranged-attack-range-modifier 1 ;; 0% bonus ranged attack range
+      set damage-reduction-modifier 1 ;; 0% damage reduction
+      set movement-modifier 1  ;; 0% movement speed reduction
+      set can-enter true
+      set pcolor gray  ;; Color for bridge
+    ]
+
+    if terrain-type = "River" [
+      set ranged-attack-damage-modifier 1 ;; 0% bonus ranged attack damage
+      set ranged-attack-range-modifier 1 ;; 0% bonus ranged attack range
+      set damage-reduction-modifier 1 ;; 0% damage reduction
+      set movement-modifier 1  ;; 0% movement speed reduction
+      set can-enter false
+      set pcolor blue  ;; Color for rivers
+    ]
+
+    if terrain-type = "Forest" [
+      set ranged-attack-damage-modifier 1 ;; 0% bonus ranged attack damage
+      set ranged-attack-range-modifier 0.85 ;; 15% reduced ranged attack range
+      set damage-reduction-modifier 1.30 ;; 30% damage reduction
+      set movement-modifier 0.85  ;; 15% movement speed reduction
+      set can-enter true
+      set pcolor green - 2  ;; Darker green for forests
+    ]
+
+    if terrain-type = "Hill" [
+      set ranged-attack-damage-modifier 1.1 ;; 10% bonus ranged attack damage
+      set ranged-attack-range-modifier 1.2 ;; 20% bonus ranged attack range
+      set damage-reduction-modifier 1.25 ;; 25% damage reduction
+      set movement-modifier 0.7  ;; 30% movement speed reduction
+      set can-enter true
+      set pcolor brown  ;; Color for hills
+    ]
+
+    ;; set plabel (word "(" pycor " " pxcor ")")
+  ]
 end
 
 to go
@@ -322,26 +824,26 @@ to speed-adj-health
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-411
-11
-1034
-449
+469
+26
+1575
+773
 -1
 -1
-0.3
+18.0
 1
-7
+4
 1
 1
 1
 0
-0
 1
 1
--1025
-1025
--715
-715
+1
+-30
+30
+-20
+20
 0
 0
 1
@@ -449,7 +951,7 @@ route-health
 route-health
 0
 100
-0.0
+6.0
 1
 1
 NIL
@@ -832,7 +1334,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.4.0
+NetLogo 6.2.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
