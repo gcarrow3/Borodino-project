@@ -687,9 +687,11 @@ to go
     if health < route-health [ retreat ]  ;; INTERFACE SLIDER VAR - Execute a retreat when health is less than route-health global var. kai
 
     if can-move-? [
-      let current-patch patch-here
-      let terrain-modifier [movement-modifier] of current-patch
-      fd speed * terrain-modifier
+      let next-patch patch-ahead 1
+      if [can-enter] of next-patch [
+        let terrain-modifier [movement-modifier] of patch-here
+        fd speed * terrain-modifier
+      ]
     ]
   ]
 
@@ -757,8 +759,10 @@ end
 
 to-report can-move-?
   let current-patch patch-here
-  report [can-enter] of current-patch
+  let next-patch patch-ahead 1
+  report ([can-enter] of current-patch) and ([can-enter] of next-patch)
 end
+
 
 ;; Cavalry flank kai
 to flank
@@ -827,11 +831,11 @@ end
 GRAPHICS-WINDOW
 469
 26
-1575
-773
+2146
+1157
 -1
 -1
-18.0
+27.37
 1
 4
 1
