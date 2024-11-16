@@ -685,6 +685,14 @@ to go
     ;;right random 360
     set label word "HP: " precision health 0
     if health < route-health [ retreat ]  ;; INTERFACE SLIDER VAR - Execute a retreat when health is less than route-health global var. kai
+
+    if can-move-? [
+      let next-patch patch-ahead 1
+      if [can-enter] of next-patch [
+        let terrain-modifier [movement-modifier] of patch-here
+        fd speed * terrain-modifier
+      ]
+    ]
   ]
 
 ;;ask turtles [ set label word "Health: " health ]
@@ -730,20 +738,18 @@ to go
 end
 
 to detect-and-attack [enemy-side]
+  let current-patch patch-here
+  let range-modifier [ranged-attack-range-modifier] of current-patch
+  let damage-modifier [ranged-attack-damage-modifier] of current-patch
   let enemy turtles with [side = enemy-side]
   if any? enemy [
-    ;; Use in-cone to find enemies within max-range and cone-size
-    let potential-targets enemy in-cone max-range cone-size
-
+    let potential-targets enemy in-cone (max-range * range-modifier) cone-size
     ifelse any? potential-targets [
-      ;; Select the closest target among potential targets
       let target min-one-of potential-targets [distance myself]
-      ;; Attack the target
       ask target [
-        set health health - 10 ;; Decrease health of the target
+        set health health - (10 * damage-modifier) ;; Adjust damage based on terrain
       ]
     ] [
-      ;; Move towards the closest enemy if no target is within cone
       let nearest-enemy min-one-of enemy [distance myself]
       face nearest-enemy
       fd speed
@@ -751,29 +757,28 @@ to detect-and-attack [enemy-side]
   ]
 end
 
+to-report can-move-?
+  let current-patch patch-here
+  let next-patch patch-ahead 1
+  report ([can-enter] of current-patch) and ([can-enter] of next-patch)
+end
 
 
 ;; Cavalry flank kai
 to flank
-  let enemy-side ifelse-value (side = "french") ["russian"] ["french"] ;; Determine enemy side based on self
-  let enemy-units turtles with [side = enemy-side] ;; Get enemy units
-  let target one-of enemy-units ;; Select a random enemy unit as the target
-
-  ;; Check if there is a target
+  let current-patch patch-here
+  let terrain-modifier [movement-modifier] of current-patch
+  let enemy-side ifelse-value (side = "french") ["russian"] ["french"]
+  let enemy-units turtles with [side = enemy-side]
+  let target one-of enemy-units
   if target != nobody [
-    ;; Calculate the flank direction
-    let flank-direction ifelse-value (random 2 = 0) [90] [-90] ;; Choose to flank left or right (90 or -90 degrees)
-
-    ;; Set heading to flank relative to the target's heading
+    let flank-direction ifelse-value (random 2 = 0) [90] [-90]
     set heading (towards target + flank-direction)
-
-    ;; Move forward at the specified speed
-    fd speed
-
-    ;; After moving, adjust to face the target for potential attack
+    fd speed * terrain-modifier
     face target
   ]
 end
+
 
 ;; If health is less than 30%, run from the battlefield and despawn. kai
 to retreat
@@ -826,11 +831,11 @@ end
 GRAPHICS-WINDOW
 469
 26
-1575
-773
+2146
+1157
 -1
 -1
-18.0
+27.37
 1
 4
 1
